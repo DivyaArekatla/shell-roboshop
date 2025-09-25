@@ -59,11 +59,12 @@ npm install &>>$LOG_FILE
 VALIDATE $? "installing dependencies"
 
 cp $SCRIPT_DIR/cart.service /etc/systemd/system/cart.service
+VALIDATE $? "Copuy systemctl service"
 systemctl daemon-reload
 systemctl enable cart &>>$LOG_FILE
 VALIDATE $? "enabling cart"
-systemctl start cart &>>$LOG_FILE
-VALIDATE $? "starting cart"
+systemctl restart cart &>>$LOG_FILE
+VALIDATE $? "restarting cart"
 
 
 
