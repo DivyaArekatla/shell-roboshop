@@ -8,7 +8,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-
+START_TIME=$(date +%s)
 mkdir -p $LOGS_FOLDER
 echo "Script started executed at: $(date)" | tee -a $LOG_FILE
 if [ $USERID -ne 0 ]; then
@@ -34,9 +34,12 @@ VALIDATE $? "Enabling redis:7"
 dnf install redis -y &>>$LOG_FILE
 VALIDATE $? "Installing redis"
 
-sed -i -e '/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf
+sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf
 systemctl enable redis 
 VALIDATE $? "enable redis"
 systemctl start redis 
 
+END_TIME=$(date +%s)
+TOTAL_TIME=$(( $END_TIME - $START_TIME))
+echo -e "script executed in: $TOTAL_TIME seconds"
 
